@@ -33,31 +33,26 @@ extension ResultViewController {
         
        let animalType = maxCountOfAnimalType()
         
-        switch animalType {
-        case .dog:
-            animalTypeResultLabel.text = "ВЫ - \(AnimalType.dog.rawValue)"
-            animalTypeDefinitionResultLabel.text = AnimalType.dog.definition
-        case .cat:
-            animalTypeResultLabel.text = "ВЫ - \(AnimalType.cat.rawValue)"
-            animalTypeDefinitionResultLabel.text = AnimalType.cat.definition
-        case .rabbit:
-            animalTypeResultLabel.text = "ВЫ - \(AnimalType.rabbit.rawValue)"
-            animalTypeDefinitionResultLabel.text = AnimalType.rabbit.definition
-        case .turtle:
-            animalTypeResultLabel.text = "ВЫ - \(AnimalType.turtle.rawValue)"
-            animalTypeDefinitionResultLabel.text = AnimalType.turtle.definition
-        }
+       
+            animalTypeResultLabel.text = "ВЫ - \(animalType.rawValue)"
+            animalTypeDefinitionResultLabel.text = animalType.definition
+        
     }
     private func maxCountOfAnimalType() -> AnimalType {
+//        делаем словарь с типами животный и их колличеством в ответах
+        var dictionaryOfAnimalsCount : [AnimalType : Int ] = [:]
+//        достаем всех животных в новым массив
+        let animals = answers.map {$0.type}
+//        наполняем словарькладя в каждый тип животного количество повторений в массиве
+        for animal in animals {
+            dictionaryOfAnimalsCount[animal] = (dictionaryOfAnimalsCount[animal] ?? 0) + 1
+        }
         
-//        сделали расширение, подписались под протокол и тепреь считаем сколько типов животных по количеству, складываем в словарь
-        let counts = answers.counting
-        print(counts)
 //сортируем словарь по большему значению
-        let sortAnimal = counts.sorted {$0.value > $1.value}
-        print(sortAnimal)
+        let sortAnimal = dictionaryOfAnimalsCount.sorted {$0.value > $1.value}
+        
 //        берем тип из первого ключа, тк он самый большой и извлекаем опционал
-        if let animalType = sortAnimal.first?.key.type {
+        if let animalType = sortAnimal.first?.key {
             return animalType
         }
         return AnimalType.rabbit
